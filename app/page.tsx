@@ -27,13 +27,13 @@ export default function JajananTrackerPage() {
   // State Form Input
   const [form, setForm] = useState({
     kode: '',
-    seller: 'Sukwa GO (WA)',
+    seller: '',
     nama_barang: '',
     jumlah_barang: '1',
     status: 'BELUM UPNOTES',
     harga_dasar: '',
     tax: '0',
-    sudah_bayar: '0',
+    sudah_bayar: '',
     last_payment: '',
     max_tgl_co: '',
     notes: '',
@@ -167,7 +167,7 @@ export default function JajananTrackerPage() {
     else if (form.status === 'UPNOTES LANGSUNG LUNAS') {
       finalSudahBayar = finalHargaDasar + finalTax;
       finalLastPayment = tglHariIni;
-      finalMaxTglCo = '-';
+      // finalMaxTglCo = '-'; // HAPUS/COMMENT BARIS INI agar nilai dari input form tetap tersimpan
       const stamp = `[Lunas Langsung pada ${formatWaktu} WIB]`;
       finalNotes = form.notes && form.notes !== '-' ? `${form.notes} ${stamp}` : stamp;
     }
@@ -380,10 +380,12 @@ export default function JajananTrackerPage() {
             <div>
               <label className="block text-xs font-semibold text-gray-500 mb-1">Nama Seller / GO</label>
               <select
+                required // Menambahkan atribut wajib diisi
                 value={form.seller}
                 onChange={(e) => setForm({...form, seller: e.target.value})}
                 className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white"
               >
+                <option value="">-- Pilih Seller --</option>
                 {SELLER_OPTIONS.map((opt, idx) => (
                   <option key={idx} value={opt}>{opt}</option>
                 ))}
@@ -478,11 +480,11 @@ export default function JajananTrackerPage() {
               <label className="block text-xs font-semibold text-gray-500 mb-1">Max Tanggal CO</label>
               <input
                 type="date"
-                disabled={isAutoLunas || isTanpaCo}
-                value={form.status === 'UPNOTES PELUNASAN' ? tglSatuBulanLagi : (isTanpaCo ? '' : form.max_tgl_co)}
-                onChange={(e) => setForm({...form, max_tgl_co: e.target.value})}
-                className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white disabled:bg-gray-100"
-              />
+                disabled={isTanpaCo} 
+                  value={form.max_tgl_co} 
+                  onChange={(e) => setForm({...form, max_tgl_co: e.target.value})}
+                  className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white disabled:bg-gray-100"
+                />
             </div>
 
             {/* INPUT FILE MEDIA UPLOAD GAMBAR */}
@@ -529,14 +531,17 @@ export default function JajananTrackerPage() {
         <div className="bg-white p-5 rounded-xl shadow-xs border border-gray-100 mb-6 flex flex-col gap-4">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1">Nama Seller / GO</label>
-              <input
-                type="text"
-                placeholder="Ketik nama seller..."
-                value={searchSeller}
-                onChange={(e) => setSearchSeller(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg p-2 text-sm"
-              />
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Filter Nama Seller</label>
+              <select 
+                value={searchSeller} 
+                onChange={(e) => setSearchSeller(e.target.value)} 
+                className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white"
+              >
+                <option value="">Semua Seller</option>
+                {SELLER_OPTIONS.map((opt, idx) => (
+                  <option key={idx} value={opt}>{opt}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-500 mb-1">Status Tagihan</label>
@@ -654,6 +659,7 @@ export default function JajananTrackerPage() {
                         <td className="p-4 text-center font-medium">{item.last_payment || '-'}</td>
                         <td className="p-4 text-center text-xs">{item.max_tgl_co || '-'}</td>
                         <td className="p-4 text-right font-mono font-black">Rp {sisaPelunasan.toLocaleString('id-ID')}</td>
+                        <td className="p-4 text-sm text-gray-600 max-w-[200px] truncate" title={item.notes}>{item.notes || '-'}</td>
                         <td className="p-4 text-center">
                           <div className="flex justify-center gap-2">
                             <button onClick={() => handlePicuEdit(item)} className="px-2 py-1 bg-amber-500 text-white font-bold text-xs rounded hover:bg-amber-600 cursor-pointer">✏️ Edit</button>
