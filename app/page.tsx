@@ -29,6 +29,7 @@ export default function JajananTrackerPage() {
     kode: '',
     seller: 'Sukwa GO (WA)',
     nama_barang: '',
+    jumlah_barang: '1',
     status: 'BELUM UPNOTES',
     harga_dasar: '',
     tax: '0',
@@ -127,6 +128,7 @@ export default function JajananTrackerPage() {
     }
 
     let finalHargaDasar = Number(form.harga_dasar) || 0;
+    let finalJumlahBarang = Number(form.jumlah_barang) || 1;
     let finalTax = Number(form.tax) || 0;
     let finalSudahBayar = Number(form.sudah_bayar) || 0;
     let finalMaxTglCo = form.max_tgl_co || '-';
@@ -182,6 +184,7 @@ export default function JajananTrackerPage() {
       kode: form.kode,
       seller: form.seller,
       nama_barang: form.nama_barang,
+      jumlah_barang: finalJumlahBarang,
       status: form.status,
       harga_dasar: finalHargaDasar,
       tax: finalTax,
@@ -224,6 +227,7 @@ export default function JajananTrackerPage() {
       kode: item.kode || '',
       seller: item.seller || 'Sukwa GO (WA)',
       nama_barang: item.nama_barang || '',
+      jumlah_barang: String(item.jumlah_barang || '1'),
       status: item.status || 'BELUM UPNOTES',
       harga_dasar: String(item.harga_dasar || ''),
       tax: String(item.tax || '0'),
@@ -251,7 +255,7 @@ export default function JajananTrackerPage() {
   const resetForm = () => {
     setViewCreatedAt(null);
     setForm({
-      kode: '', seller: 'Sukwa GO (WA)', nama_barang: '', status: 'BELUM UPNOTES',
+      kode: '', seller: '', nama_barang: '', jumlah_barang: '', status: 'BELUM UPNOTES',
       harga_dasar: '', tax: '0', sudah_bayar: '0', last_payment: '', max_tgl_co: '', notes: '', image_url: ''
     });
   };
@@ -393,6 +397,17 @@ export default function JajananTrackerPage() {
                 value={form.nama_barang}
                 onChange={(e) => setForm({...form, nama_barang: e.target.value})}
                 className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Jumlah (Qty)</label>
+              <input
+                type="number"
+                min="1"
+                value={form.jumlah_barang}
+                onChange={(e) => setForm({...form, jumlah_barang: e.target.value})}
+                className="w-full border border-pink-200 rounded-lg p-2 text-sm bg-pink-50 font-bold text-pink-700 focus:outline-pink-500"
               />
             </div>
 
@@ -571,6 +586,7 @@ export default function JajananTrackerPage() {
                   <th className="p-4">Waktu Add</th>
                   <th className="p-4">Seller / GO</th>
                   <th className="p-4">Nama Barang</th>
+                  <th className="p-4 text-center">Jumlah Barang</th>
                   <th className="p-4 text-center">Gambar</th>
                   <th className="p-4 text-center">Status</th>
                   <th className="p-4 text-right">Harga Dasar</th>
@@ -610,7 +626,9 @@ export default function JajananTrackerPage() {
   
                         <td className="p-4 font-semibold">{item.seller}</td>
                         <td className="p-4">{item.nama_barang}</td>
-                          
+                        <td className="p-4 text-center font-black text-pink-600 bg-pink-50/50 rounded-lg">
+                          {item.jumlah_barang || 1}
+                        </td>
                         <td className="p-4 text-center">
                           {/* INTEGRASI LINK VIEW IMAGE MODAL */}
                           {item.image_url ? (
