@@ -100,6 +100,25 @@ export default function DashboardPage() {
               </select>
             </div>
 
+{/* PANEL FILTER SELLER */}
+            <div className="bg-white p-5 rounded-2xl shadow-sm border border-pink-100 mb-6 flex flex-col md:flex-row items-center gap-4">
+              {/* ... (kode filter yang sudah ada) ... */}
+            </div>
+
+            {/* ALERT PERINGATAN UTANG > 500 RIBU */}
+            {totalUtang > 500000 && (
+              <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded-xl shadow-sm mb-6 flex items-start md:items-center gap-4 animate-pulse">
+                <span className="text-4xl">🚨</span>
+                <div>
+                  <h4 className="font-extrabold text-red-900 text-lg">Peringatan Darurat: Utang Menumpuk!</h4>
+                  <p className="text-sm mt-1">
+                    Sisa pelunasanmu mencapai <strong>Rp {totalUtang.toLocaleString('id-ID')}</strong>. 
+                    Tarik napas, tutup aplikasi e-commerce, dan segera lunasi tagihan ini sebelum makin membengkak ya!
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Kartu Ringkasan Keuangan */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-pink-500">
