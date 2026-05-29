@@ -264,7 +264,7 @@ export default function JajananTrackerPage() {
       switch (status) {
         case 'BELUM UPNOTES': return 'bg-red-600 text-white font-bold';
         case 'UPNOTES PERTAMA/DP': return 'bg-blue-600 text-white font-bold';
-        case 'UPNOTES LANGSUNG LUNAS': return 'bg-sky-500 text-white font-bold';
+        case 'UPNOTES LANGSUNG LUNAS': return 'bg-yellow-500 text-white font-bold';
         case 'UPNOTES PELUNASAN': return 'bg-sky-500 text-white font-bold';
         case 'OS': return 'bg-slate-900 text-slate-100 font-bold border border-slate-600';
         case 'MASUK LIST CO': return 'bg-green-700 text-white font-bold';
