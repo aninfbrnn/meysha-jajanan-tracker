@@ -579,6 +579,7 @@ export default function JajananTrackerPage() {
                   <th className="p-4 text-center">Last Payment</th>
                   <th className="p-4 text-center">Max Tgl CO</th>
                   <th className="p-4 text-right">Sisa Pelunasan</th>
+                  <th className="p-4">Notes</th>
                   <th className="p-4 text-center">Aksi</th>
                 </tr>
               </thead>
