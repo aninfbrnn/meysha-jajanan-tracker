@@ -282,7 +282,7 @@ export default function JajananTrackerPage() {
         return 'bg-blue-200 text-blue-900 hover:bg-blue-300 border-blue-300'; // Biru 
       case 'UPNOTES PELUNASAN':
       case 'UPNOTES LANGSUNG LUNAS':
-        return 'bg-sky-100 text-sky-900 hover:bg-sky-200 border-sky-200'; // Biru Muda
+        return 'bg-yellow-100 text-yellow-900 hover:bg-yellow-200 border-yellow-200'; // kuning
       case 'OS': 
         return 'bg-gray-700 text-gray-100 hover:bg-gray-600 border-gray-600'; // Abu-abu tua
       case 'MASUK LIST CO': 
