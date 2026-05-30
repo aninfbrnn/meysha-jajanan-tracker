@@ -640,7 +640,7 @@ export default function JajananTrackerPage() {
   
                         <td className="p-4 font-semibold">{item.seller}</td>
                         <td className="p-4">{item.nama_barang}</td>
-                        <td className="p-4 text-center font-black text-pink-600 bg-pink-50/50 rounded-lg">
+                        <td className="p-4 text-center">
                           {item.jumlah_barang || 1}
                         </td>
                         <td className="p-4 text-center">
