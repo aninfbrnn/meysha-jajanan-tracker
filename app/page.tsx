@@ -418,6 +418,7 @@ export default function JajananTrackerPage() {
                 min="1"
                 value={form.jumlah_barang}
                 onChange={(e) => setForm({...form, jumlah_barang: e.target.value})}
+                className="w-full border border-pink-200 rounded-lg p-2 text-sm bg-pink-50 font-bold text-pink-700 focus:outline-pink-500"
               />
             </div>
 
@@ -639,7 +640,7 @@ export default function JajananTrackerPage() {
   
                         <td className="p-4 font-semibold">{item.seller}</td>
                         <td className="p-4">{item.nama_barang}</td>
-                        <td className="p-4 text-center font-black text-pink-600 bg-pink-50/50 rounded-lg">
+                        <td className="p-4 text-center font-black text-pink-0 bg-pink-0 rounded-lg">
                           {item.jumlah_barang || 1}
                         </td>
                         <td className="p-4 text-center">
