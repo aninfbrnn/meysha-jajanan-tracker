@@ -530,7 +530,7 @@ export default function JajananTrackerPage() {
                   editingId ? 'bg-amber-600 hover:bg-amber-700' : 'bg-pink-600 hover:bg-pink-700'
                 } disabled:bg-gray-400`}
               >
-                {isUploading ? 'Mengunggah...' : (editingId ? '💾 Simpan Perubahan' : '☁️ Simpan ke Cloud')}
+                {isUploading ? 'Mengunggah...' : (editingId ? '💾 Simpan Perubahan' : '☁️ Simpan Sekarang')}
               </button>
             </div>
           </form>
@@ -640,7 +640,7 @@ export default function JajananTrackerPage() {
   
                         <td className="p-4 font-semibold">{item.seller}</td>
                         <td className="p-4">{item.nama_barang}</td>
-                        <td className="p-4 text-center font-black text-pink-0 bg-pink-0 rounded-lg">
+                        <td className="p-4 text-center font-black text-pink-600 bg-pink-50/50 rounded-lg">
                           {item.jumlah_barang || 1}
                         </td>
                         <td className="p-4 text-center">
