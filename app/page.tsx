@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import Link from 'next/link';
 
@@ -16,6 +16,7 @@ const SELLER_OPTIONS = [
 ];
 
 export default function JajananTrackerPage() {
+  const formRef = useRef<HTMLDivElement>(null);
   const [daftarJajanan, setDaftarJajanan] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
@@ -237,6 +238,11 @@ export default function JajananTrackerPage() {
       notes: item.notes || '',
       image_url: item.image_url || ''
     });
+
+    formRef.current?.scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'start' 
+    });
   };
 
   const handleHapusData = async (id: number, nama: string) => {
@@ -340,9 +346,12 @@ export default function JajananTrackerPage() {
         </header>
 
         {/* FORM INPUT */}
-        <div className={`p-5 rounded-xl border transition-all duration-300 mb-6 ${
-          editingId ? 'bg-amber-50 border-amber-300 shadow-md' : 'bg-white border-gray-100 shadow-xs'
-        }`}>
+        <div 
+          ref={formRef} 
+          className={`p-5 rounded-xl border transition-all duration-300 mb-6 ${
+            editingId ? 'bg-amber-50 border-amber-300 shadow-md' : 'bg-white border-gray-100 shadow-xs'
+          }`}
+        >
           <div className="flex justify-between items-center mb-4">
             <h2 className={`text-sm font-bold uppercase tracking-wider ${editingId ? 'text-amber-700' : 'text-pink-500'}`}>
               {editingId ? `✏️ Mode Edit (Mengubah Kode: ${form.kode})` : '➕ Tambah Rekaman Jajanan'}
@@ -356,7 +365,7 @@ export default function JajananTrackerPage() {
                 Batal Edit
               </button>
             )}
-          </div>
+        </div>
 
           <form onSubmit={handleInsertAtauUpdate} className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* INPUT OTOMATIS TANGGAL ADD */}
@@ -592,6 +601,7 @@ export default function JajananTrackerPage() {
                   <th className="p-4">Seller / GO</th>
                   <th className="p-4">Nama Barang</th>
                   <th className="p-4 text-center">Jumlah Barang</th>
+                  <th className="p-4 text-center">Aksi</th>
                   <th className="p-4 text-center">Gambar</th>
                   <th className="p-4 text-center">Status</th>
                   <th className="p-4 text-right">Harga Dasar</th>
@@ -601,7 +611,6 @@ export default function JajananTrackerPage() {
                   <th className="p-4 text-center">Max Tgl CO</th>
                   <th className="p-4 text-right">Sisa Pelunasan</th>
                   <th className="p-4">Notes</th>
-                  <th className="p-4 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y text-sm">
@@ -635,6 +644,12 @@ export default function JajananTrackerPage() {
                           {item.jumlah_barang || 1}
                         </td>
                         <td className="p-4 text-center">
+                          <div className="flex justify-center gap-2">
+                            <button onClick={() => handlePicuEdit(item)} className="px-2 py-1 bg-amber-500 text-white font-bold text-xs rounded hover:bg-amber-600 cursor-pointer">✏️ Edit</button>
+                            <button onClick={() => handleHapusData(item.id, item.nama_barang)} className="px-2 py-1 bg-red-600 text-white font-bold text-xs rounded hover:bg-red-700 cursor-pointer">🗑️ Hapus</button>
+                          </div>
+                        </td>
+                        <td className="p-4 text-center">
                           {/* INTEGRASI LINK VIEW IMAGE MODAL */}
                           {item.image_url ? (
                             <button
@@ -660,12 +675,6 @@ export default function JajananTrackerPage() {
                         <td className="p-4 text-center text-xs">{item.max_tgl_co || '-'}</td>
                         <td className="p-4 text-right font-mono font-black">Rp {sisaPelunasan.toLocaleString('id-ID')}</td>
                         <td className="p-4 text-sm text-gray-600 max-w-[200px] truncate" title={item.notes}>{item.notes || '-'}</td>
-                        <td className="p-4 text-center">
-                          <div className="flex justify-center gap-2">
-                            <button onClick={() => handlePicuEdit(item)} className="px-2 py-1 bg-amber-500 text-white font-bold text-xs rounded hover:bg-amber-600 cursor-pointer">✏️ Edit</button>
-                            <button onClick={() => handleHapusData(item.id, item.nama_barang)} className="px-2 py-1 bg-red-600 text-white font-bold text-xs rounded hover:bg-red-700 cursor-pointer">🗑️ Hapus</button>
-                          </div>
-                        </td>
                       </tr>
                       );
                   })
