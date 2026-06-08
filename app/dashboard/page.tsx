@@ -100,11 +100,6 @@ export default function DashboardPage() {
               </select>
             </div>
 
-{/* PANEL FILTER SELLER */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-pink-100 mb-6 flex flex-col md:flex-row items-center gap-4">
-              {/* ... (kode filter yang sudah ada) ... */}
-            </div>
-
             {/* ALERT PERINGATAN UTANG > 500 RIBU */}
             {totalUtang > 500000 && (
               <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded-xl shadow-sm mb-6 flex items-start md:items-center gap-4 animate-pulse">

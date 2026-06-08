@@ -548,61 +548,61 @@ export default function JajananTrackerPage() {
         </div>
 
         {/* PANEL FILTER & SORTING */}
-        <div className="md:col-span-2">
-          <div className="flex items-center justify-between mb-1">
-            <label className="text-xs font-semibold text-gray-500">Filter Status Tagihan</label>
-            <div className="flex gap-1">
-              <button
-                type="button"
-                onClick={() => setFilterStatusMode('include')}
-                className={`text-[10px] font-bold px-2 py-0.5 rounded ${filterStatusMode === 'include' ? 'bg-pink-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
-              >
-                Termasuk
-              </button>
-              <button
-                type="button"
-                onClick={() => setFilterStatusMode('exclude')}
-                className={`text-[10px] font-bold px-2 py-0.5 rounded ${filterStatusMode === 'exclude' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
-              >
-                Kecuali
-              </button>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-2 border border-gray-200 rounded-lg p-2 bg-white min-h-[38px]">
-            {[
-              'BELUM UPNOTES', 'UPNOTES PERTAMA/DP', 'UPNOTES LANGSUNG LUNAS',
-              'UPNOTES PELUNASAN', 'OS', 'MASUK LIST CO', 'ARRIVE HOME'
-            ].map(s => (
-              <label key={s} className="flex items-center gap-1 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={filterStatusList.includes(s)}
-                  onChange={() => handleToggleFilterStatus(s)}
-                  className="accent-pink-600 w-3 h-3"
-                />
-                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${getStatusBadgeStyle(s)}`}>
-                  {s}
-                </span>
-              </label>
-            ))}
-            {filterStatusList.length > 0 && (
-              <button
-                type="button"
-                onClick={() => setFilterStatusList([])}
-                className="text-[10px] text-red-500 hover:underline font-semibold ml-auto"
-              >
-                Reset
-              </button>
-            )}
-          </div>
+        <div className="md:col-span-5">
+        <div className="flex items-center gap-3 mb-2">
+          <label className="text-xs font-semibold text-gray-500">Filter Status Tagihan</label>
+          <button
+            type="button"
+            onClick={() => setFilterStatusMode(prev => prev === 'include' ? 'exclude' : 'include')}
+            className={`text-xs font-bold px-3 py-1 rounded-full border transition-colors cursor-pointer ${
+              filterStatusMode === 'include'
+                ? 'bg-pink-600 text-white border-pink-600'
+                : 'bg-orange-500 text-white border-orange-500'
+            }`}
+          >
+            {filterStatusMode === 'include' ? '✅ Tampilkan Yang Dipilih' : '🚫 Kecuali Yang Dipilih'}
+          </button>
           {filterStatusList.length > 0 && (
-            <p className="text-[10px] text-gray-400 mt-1">
-              {filterStatusMode === 'include'
-                ? `Menampilkan ${filterStatusList.length} status dipilih`
-                : `Menyembunyikan ${filterStatusList.length} status dipilih`}
-            </p>
+            <button
+              type="button"
+              onClick={() => setFilterStatusList([])}
+              className="text-xs text-gray-400 hover:text-red-500 underline cursor-pointer"
+            >
+              Reset
+            </button>
+          )}
+          {filterStatusList.length === 0 && (
+            <span className="text-xs text-gray-400 italic">Semua status ditampilkan</span>
           )}
         </div>
+        <div className="flex flex-wrap gap-2">
+          {[
+            'BELUM UPNOTES',
+            'UPNOTES PERTAMA/DP',
+            'UPNOTES LANGSUNG LUNAS',
+            'UPNOTES PELUNASAN',
+            'OS',
+            'MASUK LIST CO',
+            'ARRIVE HOME'
+          ].map((status) => {
+            const isSelected = filterStatusList.includes(status);
+            return (
+              <button
+                key={status}
+                type="button"
+                onClick={() => handleToggleFilterStatus(status)}
+                className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
+                  isSelected
+                    ? getStatusBadgeStyle(status) + ' ring-2 ring-offset-1 ring-pink-400 scale-105'
+                    : 'bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200'
+                }`}
+              >
+                {isSelected ? '✓ ' : ''}{status}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
         {/* TABEL DATA DISPLAY */}
         <div className="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden">
