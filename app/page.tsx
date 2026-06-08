@@ -46,8 +46,7 @@ export default function JajananTrackerPage() {
 
   // State Filter & Sorting
   const [searchSeller, setSearchSeller] = useState('');
-  const [filterStatusList, setFilterStatusList] = useState<string[]>([]);
-  const [filterStatusMode, setFilterStatusMode] = useState<'include' | 'exclude'>('include');
+  const [filterStatus, setFilterStatus] = useState('');
   const [filterPelunasan, setFilterPelunasan] = useState('SEMUA'); 
   const [sortBy, setSortBy] = useState('created_at'); 
   const [sortOrder, setSortOrder] = useState('desc'); 
@@ -83,12 +82,6 @@ export default function JajananTrackerPage() {
       setDaftarJajanan(data);
     }
     setIsLoading(false);
-  };
-
-  const handleToggleFilterStatus = (status: string) => {
-    setFilterStatusList(prev =>
-      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
-    );
   };
 
   useEffect(() => {
@@ -310,11 +303,7 @@ export default function JajananTrackerPage() {
   const processedData = daftarJajanan
     .filter((item) => {
       const matchSeller = item.seller?.toLowerCase().includes(searchSeller.toLowerCase());
-      const matchStatus = filterStatusList.length === 0
-        ? true
-        : filterStatusMode === 'include'
-          ? filterStatusList.includes(item.status)
-          : !filterStatusList.includes(item.status);
+      const matchStatus = filterStatus ? item.status === filterStatus : true;
       
       const totalTagihan = Number(item.harga_dasar || 0) + Number(item.tax || 0);
       const sisaPelunasan = totalTagihan - Number(item.sudah_bayar || 0);
@@ -548,61 +537,58 @@ export default function JajananTrackerPage() {
         </div>
 
         {/* PANEL FILTER & SORTING */}
-        <div className="md:col-span-5">
-  <div className="flex items-center gap-3 mb-2">
-    <label className="text-xs font-semibold text-gray-500">Filter Status Tagihan</label>
-    <button
-      type="button"
-      onClick={() => setFilterStatusMode(prev => prev === 'include' ? 'exclude' : 'include')}
-      className={`text-xs font-bold px-3 py-1 rounded-full border transition-colors cursor-pointer ${
-        filterStatusMode === 'include'
-          ? 'bg-pink-600 text-white border-pink-600'
-          : 'bg-orange-500 text-white border-orange-500'
-      }`}
-    >
-      {filterStatusMode === 'include' ? '✅ Tampilkan Yang Dipilih' : '🚫 Kecuali Yang Dipilih'}
-    </button>
-    {filterStatusList.length > 0 && (
-      <button
-        type="button"
-        onClick={() => setFilterStatusList([])}
-        className="text-xs text-gray-400 hover:text-red-500 underline cursor-pointer"
-      >
-        Reset
-      </button>
-    )}
-    {filterStatusList.length === 0 && (
-      <span className="text-xs text-gray-400 italic">Semua status ditampilkan</span>
-    )}
-  </div>
-  <div className="flex flex-wrap gap-2">
-    {[
-      'BELUM UPNOTES',
-      'UPNOTES PERTAMA/DP',
-      'UPNOTES LANGSUNG LUNAS',
-      'UPNOTES PELUNASAN',
-      'OS',
-      'MASUK LIST CO',
-      'ARRIVE HOME'
-    ].map((status) => {
-      const isSelected = filterStatusList.includes(status);
-      return (
-        <button
-          key={status}
-          type="button"
-          onClick={() => handleToggleFilterStatus(status)}
-          className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
-            isSelected
-              ? getStatusBadgeStyle(status) + ' ring-2 ring-offset-1 ring-pink-400 scale-105'
-              : 'bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200'
-          }`}
-        >
-          {isSelected ? '✓ ' : ''}{status}
-        </button>
-      );
-    })}
-  </div>
-</div>
+        <div className="bg-white p-5 rounded-xl shadow-xs border border-gray-100 mb-6 flex flex-col gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Filter Nama Seller</label>
+              <select 
+                value={searchSeller} 
+                onChange={(e) => setSearchSeller(e.target.value)} 
+                className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white"
+              >
+                <option value="">Semua Seller</option>
+                {SELLER_OPTIONS.map((opt, idx) => (
+                  <option key={idx} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Status Tagihan</label>
+              <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white">
+                <option value="">Semua Status</option>
+                <option value="BELUM UPNOTES">BELUM UPNOTES</option>
+                <option value="UPNOTES PERTAMA/DP">UPNOTES PERTAMA/DP</option>
+                <option value="UPNOTES LANGSUNG LUNAS">UPNOTES LANGSUNG LUNAS</option>
+                <option value="UPNOTES PELUNASAN">UPNOTES PELUNASAN</option>
+                <option value="OS">OS</option>
+                <option value="MASUK LIST CO">MASUK LIST CO</option>
+                <option value="ARRIVE HOME">ARRIVE HOME</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Status Pelunasan</label>
+              <select value={filterPelunasan} onChange={(e) => setFilterPelunasan(e.target.value)} className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white">
+                <option value="SEMUA">Semua Data Belanja</option>
+                <option value="BELUM_LUNAS">⚠️ Masih Sisa Pelunasan</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Urutkan Berdasarkan</label>
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white">
+                <option value="created_at">⏰ Otomatis Waktu Input</option>
+                <option value="max_tgl_co">📅 Max Tanggal CO</option>
+                <option value="harga_dasar">💰 Harga Dasar</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Arah Urutan</label>
+              <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white">
+                <option value="desc">Descending (Terbaru / Besar)</option>
+                <option value="asc">Ascending (Lama / Kecil)</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
         {/* TABEL DATA DISPLAY */}
         <div className="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden">
