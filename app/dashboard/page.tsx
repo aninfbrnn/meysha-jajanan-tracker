@@ -95,7 +95,7 @@ export default function DashboardPage() {
               >
                 <option value="SEMUA">🌸 Tampilkan Semua Seller 🌸</option>
                 {daftarSeller.map((seller, idx) => (
-                  <option key={idx} value={seller as string}>{seller as string}</option>
+                  <option key={idx} value={seller as string}></option>
                 ))}
               </select>
             </div>
