@@ -12,7 +12,7 @@ const SELLER_OPTIONS = [
   "LALULELANG HARTAKARUN (LINE 2)", "TEUMEN JAJAN (LINE 2)", 
   "TEUBROKE (LINE 2)", "TEUMEDEUL (LINE 2)", "GO BY BLOOM (WA)", 
   "LECY SOULGO (WA)", "KANEYOSH (WA)", "CHINGU TITIP GO (WA)", 
-  "X/Twitter", "Shopee"
+  "X/Twitter", "Shopee", "Sharing by Sraya"
 ];
 
 export default function JajananTrackerPage() {
@@ -46,7 +46,8 @@ export default function JajananTrackerPage() {
 
   // State Filter & Sorting
   const [searchSeller, setSearchSeller] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
+  const [filterStatusList, setFilterStatusList] = useState<string[]>([]);
+  const [filterStatusMode, setFilterStatusMode] = useState<'include' | 'exclude'>('include');
   const [filterPelunasan, setFilterPelunasan] = useState('SEMUA'); 
   const [sortBy, setSortBy] = useState('created_at'); 
   const [sortOrder, setSortOrder] = useState('desc'); 
@@ -82,6 +83,12 @@ export default function JajananTrackerPage() {
       setDaftarJajanan(data);
     }
     setIsLoading(false);
+  };
+
+  const handleToggleFilterStatus = (status: string) => {
+    setFilterStatusList(prev =>
+      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+    );
   };
 
   useEffect(() => {
@@ -303,7 +310,11 @@ export default function JajananTrackerPage() {
   const processedData = daftarJajanan
     .filter((item) => {
       const matchSeller = item.seller?.toLowerCase().includes(searchSeller.toLowerCase());
-      const matchStatus = filterStatus ? item.status === filterStatus : true;
+      const matchStatus = filterStatusList.length === 0
+        ? true
+        : filterStatusMode === 'include'
+          ? filterStatusList.includes(item.status)
+          : !filterStatusList.includes(item.status);
       
       const totalTagihan = Number(item.harga_dasar || 0) + Number(item.tax || 0);
       const sisaPelunasan = totalTagihan - Number(item.sudah_bayar || 0);
@@ -537,57 +548,60 @@ export default function JajananTrackerPage() {
         </div>
 
         {/* PANEL FILTER & SORTING */}
-        <div className="bg-white p-5 rounded-xl shadow-xs border border-gray-100 mb-6 flex flex-col gap-4">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1">Filter Nama Seller</label>
-              <select 
-                value={searchSeller} 
-                onChange={(e) => setSearchSeller(e.target.value)} 
-                className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white"
+        <div className="md:col-span-2">
+          <div className="flex items-center justify-between mb-1">
+            <label className="text-xs font-semibold text-gray-500">Filter Status Tagihan</label>
+            <div className="flex gap-1">
+              <button
+                type="button"
+                onClick={() => setFilterStatusMode('include')}
+                className={`text-[10px] font-bold px-2 py-0.5 rounded ${filterStatusMode === 'include' ? 'bg-pink-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
               >
-                <option value="">Semua Seller</option>
-                {SELLER_OPTIONS.map((opt, idx) => (
-                  <option key={idx} value={opt}>{opt}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1">Status Tagihan</label>
-              <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white">
-                <option value="">Semua Status</option>
-                <option value="BELUM UPNOTES">BELUM UPNOTES</option>
-                <option value="UPNOTES PERTAMA/DP">UPNOTES PERTAMA/DP</option>
-                <option value="UPNOTES LANGSUNG LUNAS">UPNOTES LANGSUNG LUNAS</option>
-                <option value="UPNOTES PELUNASAN">UPNOTES PELUNASAN</option>
-                <option value="OS">OS</option>
-                <option value="MASUK LIST CO">MASUK LIST CO</option>
-                <option value="ARRIVE HOME">ARRIVE HOME</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1">Status Pelunasan</label>
-              <select value={filterPelunasan} onChange={(e) => setFilterPelunasan(e.target.value)} className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white">
-                <option value="SEMUA">Semua Data Belanja</option>
-                <option value="BELUM_LUNAS">⚠️ Masih Sisa Pelunasan</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1">Urutkan Berdasarkan</label>
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white">
-                <option value="created_at">⏰ Otomatis Waktu Input</option>
-                <option value="max_tgl_co">📅 Max Tanggal CO</option>
-                <option value="harga_dasar">💰 Harga Dasar</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1">Arah Urutan</label>
-              <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white">
-                <option value="desc">Descending (Terbaru / Besar)</option>
-                <option value="asc">Ascending (Lama / Kecil)</option>
-              </select>
+                Termasuk
+              </button>
+              <button
+                type="button"
+                onClick={() => setFilterStatusMode('exclude')}
+                className={`text-[10px] font-bold px-2 py-0.5 rounded ${filterStatusMode === 'exclude' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+              >
+                Kecuali
+              </button>
             </div>
           </div>
+          <div className="flex flex-wrap gap-2 border border-gray-200 rounded-lg p-2 bg-white min-h-[38px]">
+            {[
+              'BELUM UPNOTES', 'UPNOTES PERTAMA/DP', 'UPNOTES LANGSUNG LUNAS',
+              'UPNOTES PELUNASAN', 'OS', 'MASUK LIST CO', 'ARRIVE HOME'
+            ].map(s => (
+              <label key={s} className="flex items-center gap-1 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={filterStatusList.includes(s)}
+                  onChange={() => handleToggleFilterStatus(s)}
+                  className="accent-pink-600 w-3 h-3"
+                />
+                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${getStatusBadgeStyle(s)}`}>
+                  {s}
+                </span>
+              </label>
+            ))}
+            {filterStatusList.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setFilterStatusList([])}
+                className="text-[10px] text-red-500 hover:underline font-semibold ml-auto"
+              >
+                Reset
+              </button>
+            )}
+          </div>
+          {filterStatusList.length > 0 && (
+            <p className="text-[10px] text-gray-400 mt-1">
+              {filterStatusMode === 'include'
+                ? `Menampilkan ${filterStatusList.length} status dipilih`
+                : `Menyembunyikan ${filterStatusList.length} status dipilih`}
+            </p>
+          )}
         </div>
 
         {/* TABEL DATA DISPLAY */}
