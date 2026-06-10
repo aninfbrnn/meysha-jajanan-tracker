@@ -12,7 +12,7 @@ const SELLER_OPTIONS = [
   "LALULELANG HARTAKARUN (LINE 2)", "TEUMEN JAJAN (LINE 2)", 
   "TEUBROKE (LINE 2)", "TEUMEDEUL (LINE 2)", "GO BY BLOOM (WA)", 
   "LECY SOULGO (WA)", "KANEYOSH (WA)", "CHINGU TITIP GO (WA)", 
-  "X/Twitter", "Shopee", "Sharing by Sraya"
+  "X/Twitter", "Shopee", "AYAJO GO (LINE 2)"
 ];
 
 export default function JajananTrackerPage() {
